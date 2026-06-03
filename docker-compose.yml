@@ -1,0 +1,46 @@
+services:
+  # --- Контейнер 1: база данных ---
+  db:
+    image: postgres:16-alpine
+    container_name: fuelac-db
+    environment:
+      POSTGRES_DB: fuelac
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d fuelac"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --- Контейнер 2: серверная часть (Spring Boot) ---
+  backend:
+    build: ./fuelac
+    container_name: fuelac-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/fuelac
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # --- Контейнер 3: клиентская часть (Vite dev, npm run dev) ---
+  frontend:
+    build: ./fuelac-web
+    container_name: fuelac-frontend
+    environment:
+      VITE_API_PROXY_TARGET: http://backend:8080
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

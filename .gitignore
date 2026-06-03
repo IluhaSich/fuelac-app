@@ -1,0 +1,28 @@
+# Документация / markdown (в репозитории не нужны)
+*.md
+
+# Java / Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Логи
+*.log
+npm-debug.log*
+
+# IDE / редакторы
+.idea/
+.vscode/
+*.iml
+
+# ОС
+.DS_Store
+Thumbs.db
+
+# Переменные окружения
+.env
