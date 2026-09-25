@@ -1,6 +1,3 @@
-# Документация / markdown (в репозитории не нужны)
-*.md
-
 # Java / Maven
 target/
 .mvn/wrapper/maven-wrapper.jar
